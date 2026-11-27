@@ -77,6 +77,17 @@ what is wrong and what to do about it:
   - Browsers: it suggests the browser's own task manager rather than killing them.
 - A health score, the top resource users, a list of startup apps, and system info.
 
+## Download
+
+Grab the latest build from the [Releases page](https://github.com/noble1911/disk-cleanup-windows/releases):
+
+- `SpaceLens-<version>-win-x64.exe`: small single file. Needs the
+  [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0).
+- `SpaceLens-<version>-win-x64-standalone.zip`: one larger exe with no runtime needed.
+
+Publishing a GitHub release runs `.github/workflows/release.yml`. It tests the code, builds both
+files and attaches them to the release.
+
 ## Build and run
 
 Requires the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).
