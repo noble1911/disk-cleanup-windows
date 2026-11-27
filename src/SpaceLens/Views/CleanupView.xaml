@@ -1,0 +1,192 @@
+<UserControl x:Class="SpaceLens.Views.CleanupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:SpaceLens.ViewModels">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top">
+                <Button Content="Scan a drive first…" Command="{Binding GoToDiskMapCommand}" Margin="0,0,8,0"
+                        Visibility="{Binding HasScan, Converter={StaticResource Hidden}}" />
+                <Button Content="Analyze again" Command="{Binding AnalyzeCommand}" Margin="0,0,8,0" />
+                <Button Style="{StaticResource PrimaryButton}" Content="Clean all safe items" Command="{Binding CleanAllSafeCommand}" />
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Style="{StaticResource PageTitle}" Text="Cleanup Advisor" />
+                <TextBlock Style="{StaticResource PageSubtitle}" Text="{Binding ScanNote}" />
+            </StackPanel>
+        </DockPanel>
+
+        <!-- Summary tiles -->
+        <UniformGrid Grid.Row="1" Rows="1" Margin="0,16,0,6">
+            <Border Style="{StaticResource Card}" Margin="0,0,10,0">
+                <StackPanel>
+                    <TextBlock Text="Potential savings" Style="{StaticResource Caption}" />
+                    <TextBlock Text="{Binding TotalText}" Style="{StaticResource BigNumber}" />
+                    <TextBlock Text="across all suggestions below" Style="{StaticResource Caption}" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}" Margin="0,0,10,0">
+                <StackPanel>
+                    <TextBlock Text="Safe to clean right now" Style="{StaticResource Caption}" />
+                    <TextBlock Text="{Binding SafeText}" Style="{StaticResource BigNumber}" Foreground="{StaticResource GoodBrush}" />
+                    <TextBlock Text="temp files, caches, Recycle Bin" Style="{StaticResource Caption}" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Status" Style="{StaticResource Caption}" />
+                    <TextBlock Text="{Binding FreedText, StringFormat='Freed {0}'}" Style="{StaticResource BigNumber}" FontSize="20"
+                               Visibility="{Binding FreedText, Converter={StaticResource Visible}}" Foreground="{StaticResource GoodBrush}" />
+                    <TextBlock Text="{Binding Status}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                    <ProgressBar Style="{StaticResource ThinBar}" IsIndeterminate="True" Height="4" Margin="0,8,0,0"
+                                 Visibility="{Binding IsAnalyzing, Converter={StaticResource Visible}}" />
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+
+        <TabControl Grid.Row="2">
+            <!-- Suggestions -->
+            <TabItem Header="Suggestions">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Suggestions}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:SuggestionViewModel}">
+                                <Border Style="{StaticResource Card}" Margin="0,0,0,10" Padding="14,12">
+                                    <StackPanel>
+                                        <DockPanel>
+                                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top">
+                                                <TextBlock Text="{Binding SizeText}" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="12,0,14,0" />
+                                                <Button Content="{Binding ActionLabel}" Command="{Binding ExecuteCommand}" Style="{StaticResource PrimaryButton}" />
+                                            </StackPanel>
+                                            <StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Border Style="{StaticResource Badge}" Background="{Binding Risk, Converter={StaticResource SeveritySoftBrush}}">
+                                                        <TextBlock Text="{Binding RiskText}" FontSize="11" FontWeight="SemiBold" Foreground="{Binding Risk, Converter={StaticResource SeverityBrush}}" />
+                                                    </Border>
+                                                    <TextBlock Text="{Binding Category}" Style="{StaticResource Caption}" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Title}" Style="{StaticResource SectionTitle}" Margin="0,6,0,2" />
+                                            </StackPanel>
+                                        </DockPanel>
+                                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0" />
+                                        <TextBlock Visibility="{Binding CommandText, Converter={StaticResource Visible}}" Margin="0,6,0,0" FontFamily="Cascadia Mono, Consolas" FontSize="12"
+                                                   Text="{Binding CommandText, StringFormat='&gt; {0}'}" />
+                                        <TextBlock Visibility="{Binding NeedsAdminWarning, Converter={StaticResource Visible}}" Margin="0,6,0,0" FontSize="12"
+                                                   Foreground="{StaticResource WarningBrush}" TextWrapping="Wrap"
+                                                   Text="Most of these files belong to Windows. Restart SpaceLens as administrator to clean them fully." />
+                                        <TextBlock Visibility="{Binding ResultText, Converter={StaticResource Visible}}" Text="{Binding ResultText}" Margin="0,8,0,0"
+                                                   TextWrapping="Wrap" FontWeight="SemiBold" Foreground="{StaticResource GoodBrush}" />
+
+                                        <Expander Visibility="{Binding HasItems, Converter={StaticResource Visible}}" IsExpanded="{Binding IsExpanded}" Margin="0,8,0,0">
+                                            <Expander.Header>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Show items" FontSize="12" Foreground="{StaticResource AccentBrush}" />
+                                                    <TextBlock Text="{Binding SelectionText}" FontSize="12" Margin="12,0,0,0" Foreground="{StaticResource TextSecondaryBrush}" />
+                                                </StackPanel>
+                                            </Expander.Header>
+                                            <StackPanel Margin="0,6,0,0">
+                                                <StackPanel Orientation="Horizontal" Visibility="{Binding Selectable, Converter={StaticResource Visible}}" Margin="0,0,0,4">
+                                                    <Button Style="{StaticResource LinkButton}" Content="Select all" Command="{Binding SelectAllCommand}" CommandParameter="{StaticResource True}" Margin="0,0,12,0" />
+                                                    <Button Style="{StaticResource LinkButton}" Content="Select none" Command="{Binding SelectAllCommand}" CommandParameter="{StaticResource False}" />
+                                                </StackPanel>
+                                                <ItemsControl ItemsSource="{Binding Items}" MaxHeight="320">
+                                                    <ItemsControl.Template>
+                                                        <ControlTemplate TargetType="ItemsControl">
+                                                            <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True">
+                                                                <ItemsPresenter />
+                                                            </ScrollViewer>
+                                                        </ControlTemplate>
+                                                    </ItemsControl.Template>
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <VirtualizingStackPanel />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate DataType="{x:Type vm:SuggestionItemViewModel}">
+                                                            <Grid Margin="0,2">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="90" />
+                                                                    <ColumnDefinition Width="80" />
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <CheckBox IsChecked="{Binding IsSelected}" Margin="0,0,8,0"
+                                                                          Visibility="{Binding DataContext.Selectable, RelativeSource={RelativeSource AncestorType=ItemsControl, AncestorLevel=1}, Converter={StaticResource Visible}}" />
+                                                                <StackPanel Grid.Column="1">
+                                                                    <TextBlock Text="{Binding Path}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path}" />
+                                                                    <TextBlock Text="{Binding Note}" FontSize="11" Foreground="{StaticResource TextTertiaryBrush}"
+                                                                               Visibility="{Binding Note, Converter={StaticResource Visible}}" TextTrimming="CharacterEllipsis" />
+                                                                </StackPanel>
+                                                                <TextBlock Grid.Column="2" Text="{Binding DateText}" Style="{StaticResource Caption}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                                                <TextBlock Grid.Column="3" Text="{Binding SizeText}" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                                                <Button Grid.Column="4" Style="{StaticResource IconButton}" Content="&#xE838;" ToolTip="Show in Explorer"
+                                                                        Command="{Binding OpenCommand}" Margin="10,0,0,0" Padding="6,3" FontSize="12" />
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </Expander>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Largest files -->
+            <TabItem Header="Largest files">
+                <Grid>
+                    <TextBlock Text="Scan a drive in Disk Map to list its largest files." Style="{StaticResource Caption}" Margin="4"
+                               Visibility="{Binding HasScan, Converter={StaticResource Hidden}}" />
+                    <DataGrid ItemsSource="{Binding LargestFiles}" Visibility="{Binding HasScan, Converter={StaticResource Visible}}"
+                              x:Name="FilesGrid" MouseDoubleClick="FilesGrid_MouseDoubleClick">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="2*" />
+                            <DataGridTextColumn Header="Size" Binding="{Binding SizeText}" SortMemberPath="Size" Width="90" ElementStyle="{StaticResource RightCell}" />
+                            <DataGridTextColumn Header="Type" Binding="{Binding Category}" Width="90" />
+                            <DataGridTextColumn Header="Modified" Binding="{Binding Modified}" Width="90" />
+                            <DataGridTextColumn Header="Folder" Binding="{Binding Folder}" Width="3*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <!-- File types -->
+            <TabItem Header="File types">
+                <Grid>
+                    <TextBlock Text="Scan a drive in Disk Map to see which kinds of files use the most space." Style="{StaticResource Caption}" Margin="4"
+                               Visibility="{Binding HasScan, Converter={StaticResource Hidden}}" />
+                    <DataGrid ItemsSource="{Binding FileTypes}" Visibility="{Binding HasScan, Converter={StaticResource Visible}}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Extension" Binding="{Binding Extension}" Width="140" />
+                            <DataGridTextColumn Header="Kind" Binding="{Binding Category}" Width="110" />
+                            <DataGridTextColumn Header="Size" Binding="{Binding SizeText}" SortMemberPath="Bytes" Width="100" ElementStyle="{StaticResource RightCell}" />
+                            <DataGridTextColumn Header="Files" Binding="{Binding Count, StringFormat=N0}" Width="90" ElementStyle="{StaticResource RightCell}" />
+                            <DataGridTemplateColumn Header="Share of scanned space" Width="*" SortMemberPath="Percent">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <DockPanel>
+                                            <TextBlock DockPanel.Dock="Right" Text="{Binding Percent, StringFormat={}{0:0.#}%}" Width="48" TextAlignment="Right" />
+                                            <ProgressBar Style="{StaticResource ThinBar}" Value="{Binding Percent, Mode=OneWay}" VerticalAlignment="Center" />
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

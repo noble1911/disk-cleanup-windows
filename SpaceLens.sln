@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{33D72668-E0A9-4EC4-A1E8-A6EC9E072C40}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceLens.Core", "src\SpaceLens.Core\SpaceLens.Core.csproj", "{19E337D5-E201-4ABE-9CB9-F875C9D55177}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F604ECE9-1BE9-4337-AD36-12633F816EBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceLens.Core.Tests", "tests\SpaceLens.Core.Tests\SpaceLens.Core.Tests.csproj", "{C33C1F76-5B3E-4FE8-94EB-DD7B8C097D69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceLens", "src\SpaceLens\SpaceLens.csproj", "{B763D3E7-B85D-4B1F-B263-AD9C62182F34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceLens.UiTests", "tests\SpaceLens.UiTests\SpaceLens.UiTests.csproj", "{AFA820AC-A790-446D-B6A7-8E1508B5C538}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19E337D5-E201-4ABE-9CB9-F875C9D55177}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{19E337D5-E201-4ABE-9CB9-F875C9D55177}.Debug|Any CPU.Build.0 = Debug|x64
+		{19E337D5-E201-4ABE-9CB9-F875C9D55177}.Release|Any CPU.ActiveCfg = Release|x64
+		{19E337D5-E201-4ABE-9CB9-F875C9D55177}.Release|Any CPU.Build.0 = Release|x64
+		{C33C1F76-5B3E-4FE8-94EB-DD7B8C097D69}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{C33C1F76-5B3E-4FE8-94EB-DD7B8C097D69}.Debug|Any CPU.Build.0 = Debug|x64
+		{C33C1F76-5B3E-4FE8-94EB-DD7B8C097D69}.Release|Any CPU.ActiveCfg = Release|x64
+		{C33C1F76-5B3E-4FE8-94EB-DD7B8C097D69}.Release|Any CPU.Build.0 = Release|x64
+		{B763D3E7-B85D-4B1F-B263-AD9C62182F34}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{B763D3E7-B85D-4B1F-B263-AD9C62182F34}.Debug|Any CPU.Build.0 = Debug|x64
+		{B763D3E7-B85D-4B1F-B263-AD9C62182F34}.Release|Any CPU.ActiveCfg = Release|x64
+		{B763D3E7-B85D-4B1F-B263-AD9C62182F34}.Release|Any CPU.Build.0 = Release|x64
+		{AFA820AC-A790-446D-B6A7-8E1508B5C538}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{AFA820AC-A790-446D-B6A7-8E1508B5C538}.Debug|Any CPU.Build.0 = Debug|x64
+		{AFA820AC-A790-446D-B6A7-8E1508B5C538}.Release|Any CPU.ActiveCfg = Release|x64
+		{AFA820AC-A790-446D-B6A7-8E1508B5C538}.Release|Any CPU.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{19E337D5-E201-4ABE-9CB9-F875C9D55177} = {33D72668-E0A9-4EC4-A1E8-A6EC9E072C40}
+		{C33C1F76-5B3E-4FE8-94EB-DD7B8C097D69} = {F604ECE9-1BE9-4337-AD36-12633F816EBC}
+		{B763D3E7-B85D-4B1F-B263-AD9C62182F34} = {33D72668-E0A9-4EC4-A1E8-A6EC9E072C40}
+		{AFA820AC-A790-446D-B6A7-8E1508B5C538} = {F604ECE9-1BE9-4337-AD36-12633F816EBC}
+	EndGlobalSection
+EndGlobal
